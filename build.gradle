@@ -1,0 +1,73 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group 'github.lightningcreations'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    maven{
+        url = "https://lightningcreations.github.io/Maven"
+        name = "LightningCreations Maven"
+    }
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+publishing {
+    repositories {
+        maven {
+            def home = System.getProperty("user.home")
+            url = "$home/Maven"
+            name = "LightningCreations"
+        }
+    }
+}
+
+task publishSnapshotsToLocal{
+    dependsOn tasks.withType(PublishToMavenLocal).matching {
+        e->e.getName().contains("Snapshot")
+    }
+}
+
+task publishSnapshots{
+    dependsOn tasks.withType(PublishToMavenRepository).matching{
+        e->e.getName().contains("Snapshot")
+    }
+}
+
+task sourceJar(type: Jar){
+    from sourceSets.main.allJava
+    archiveClassifier = "sources"
+}
+
+task javadocJar(type: Jar){
+    from javadoc
+    archiveClassifier = "javadoc"
+}
+
+publishing {
+    publications {
+        core(MavenPublication){
+            from components.java
+            artifact sourceJar
+            artifact javadocJar
+            artifactId = project.archivesBaseName
+        }
+        coreSnapshot(MavenPublication){
+            from components.java
+            artifact sourceJar
+            artifact javadocJar
+            artifactId = project.archivesBaseName
+            version = project.version+"-SNAPSHOT-"+ Instant.now().toString()
+        }
+    }
+}
