@@ -56,13 +56,13 @@ task javadocJar(type: Jar){
 
 publishing {
     publications {
-        core(MavenPublication){
+        crowdControl(MavenPublication){
             from components.java
             artifact sourceJar
             artifact javadocJar
             artifactId = project.archivesBaseName
         }
-        coreSnapshot(MavenPublication){
+        crowdControlSnapshot(MavenPublication){
             from components.java
             artifact sourceJar
             artifact javadocJar

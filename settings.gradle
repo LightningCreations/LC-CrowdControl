@@ -1,2 +1,3 @@
 rootProject.name = 'lc-crowdcontrol'
+include 'TCP-Connector-v1'
 
