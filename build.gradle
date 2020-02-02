@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testRuntimeOnly project(":TCP-Connector-v1")
+    implementation 'junit:junit:4.12'
 }
 
 jar {
@@ -41,13 +41,29 @@ publishing {
     }
 }
 
+task publishVersionToLocal{
+    group = 'publishing'
+    dependsOn tasks.withType(PublishToMavenLocal).matching {
+        e->!e.getName().contains("Snapshot")
+    }
+}
+
 task publishSnapshotsToLocal{
+    group = 'publishing'
     dependsOn tasks.withType(PublishToMavenLocal).matching {
         e->e.getName().contains("Snapshot")
     }
 }
 
+task publishVersion{
+    group = 'publishing'
+    dependsOn tasks.withType(PublishToMavenRepository).matching{
+        e->!e.getName().contains("Snapshot")
+    }
+}
+
 task publishSnapshots{
+    group = 'publishing'
     dependsOn tasks.withType(PublishToMavenRepository).matching{
         e->e.getName().contains("Snapshot")
     }

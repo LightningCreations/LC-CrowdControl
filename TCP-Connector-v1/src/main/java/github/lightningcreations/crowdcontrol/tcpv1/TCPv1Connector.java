@@ -46,7 +46,7 @@ public class TCPv1Connector implements CrowdControlConnector {
     static{
         String addr = System.getProperty("crowdcontrol.connector.tcp.address");
         try {
-            if(addr.isEmpty())
+            if(addr==null)
                 toConnect = InetAddress.getLocalHost();
             else
                 toConnect = InetAddress.getByName(addr);
