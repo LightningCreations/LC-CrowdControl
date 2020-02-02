@@ -1,4 +1,5 @@
 rootProject.name = 'lc-crowdcontrol'
 include 'TCP-Connector-v1'
 include 'test'
+include 'api'
 

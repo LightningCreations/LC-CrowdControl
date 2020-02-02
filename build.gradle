@@ -3,33 +3,11 @@ plugins {
     id 'maven-publish'
 }
 
-group 'github.lightningcreations'
+group 'github.lightningcreations.crowdcontrol'
 version '1.0'
 
 sourceCompatibility = 1.8
 
-repositories {
-    mavenLocal()
-    maven{
-        url = "https://lightningcreations.github.io/Maven"
-        name = "LightningCreations Maven"
-    }
-    jcenter()
-    mavenCentral()
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'junit:junit:4.12'
-}
-
-jar {
-    manifest{
-        attributes(
-                'Automatic-Module-Name': 'github.lightningcreations.crowdcontrol'
-        )
-    }
-}
 
 publishing {
     repositories {
@@ -41,27 +19,12 @@ publishing {
     }
 }
 
-task publishVersionToLocal{
-    group = 'publishing'
-    dependsOn tasks.withType(PublishToMavenLocal).matching {
-        e->!e.getName().contains("Snapshot")
-    }
-}
-
 task publishSnapshotsToLocal{
     group = 'publishing'
     dependsOn tasks.withType(PublishToMavenLocal).matching {
         e->e.getName().contains("Snapshot")
     }
 }
-
-task publishVersion{
-    group = 'publishing'
-    dependsOn tasks.withType(PublishToMavenRepository).matching{
-        e->!e.getName().contains("Snapshot")
-    }
-}
-
 task publishSnapshots{
     group = 'publishing'
     dependsOn tasks.withType(PublishToMavenRepository).matching{
@@ -69,30 +32,15 @@ task publishSnapshots{
     }
 }
 
-task sourceJar(type: Jar){
-    from sourceSets.main.allJava
-    archiveClassifier = "sources"
+task publishReleasesToLocal{
+    group = 'publishing'
+    dependsOn tasks.withType(PublishToMavenLocal).matching {
+        e->!e.getName().contains("Snapshot")
+    }
 }
-
-task javadocJar(type: Jar){
-    from javadoc
-    archiveClassifier = "javadoc"
-}
-
-publishing {
-    publications {
-        crowdControl(MavenPublication){
-            from components.java
-            artifact sourceJar
-            artifact javadocJar
-            artifactId = project.archivesBaseName
-        }
-        crowdControlSnapshot(MavenPublication){
-            from components.java
-            artifact sourceJar
-            artifact javadocJar
-            artifactId = project.archivesBaseName
-            version = project.version+"-SNAPSHOT-"+ Instant.now().toString()
-        }
+task publishReleases{
+    group = 'publishing'
+    dependsOn tasks.withType(PublishToMavenRepository).matching{
+        e->!e.getName().contains("Snapshot")
     }
 }
