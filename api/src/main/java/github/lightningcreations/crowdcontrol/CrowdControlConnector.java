@@ -50,10 +50,10 @@ public interface CrowdControlConnector extends AutoCloseable {
     }
 
     /**
-     * For dynamic connectors that can indicate to the server that a particular effect is available.<br/>
+     * For dynamic connectors that can indicate to the server that a particular effect is available.<br>
      * It should not be relied upon that an effect not sent will not be requested by the server,
-     *  and unavailable effects should still result in the appropriate response.<br/>
-     * It should also not be relied upon that exceptional completetion occurs if the request is unsupported. <br/>
+     *  and unavailable effects should still result in the appropriate response.<br>
+     * It should also not be relied upon that exceptional completetion occurs if the request is unsupported. <br>
      *
      * The effect is not required to be sent (and therefore the request completed) on any particular schedule.
      *  Completetion of this future should not be relied upon for operation.

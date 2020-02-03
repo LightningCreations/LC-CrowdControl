@@ -25,7 +25,7 @@ public class TCPv1Connector implements CrowdControlConnector {
     private Thread t;
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
-    private class Pair{
+    private static class Pair{
         CrowdControlRequest.Response res;
         CompletableFuture<Void> v;
 
@@ -44,15 +44,16 @@ public class TCPv1Connector implements CrowdControlConnector {
     private static final int port = (int)(long)Long.getLong("crowdcontrol.connector.tcp.port",58430);
     private static final InetAddress toConnect;
     static{
-        String addr = System.getProperty("crowdcontrol.connector.tcp.address");
+        String addr = System.getProperty("crowdcontrol.connector.tcp.address","127.0.0.1");
         try {
-            if(addr==null)
-                toConnect = InetAddress.getLocalHost();
-            else
                 toConnect = InetAddress.getByName(addr);
         } catch (UnknownHostException e) {
             throw new ExceptionInInitializerError(e);
         }
+    }
+
+    public TCPv1Connector(){
+        System.out.printf("Started new CrowdControl TCP v1 Connector Client on %s:%d%n",toConnect,port);
     }
 
     private void run(){
@@ -100,7 +101,7 @@ public class TCPv1Connector implements CrowdControlConnector {
     @Override
     public CompletableFuture<Void> sendResult(CrowdControlRequest.Response response) {
         CompletableFuture<Void> ret = new CompletableFuture<>();
-        Pair p = new Pair(response,ret);
+        Pair p = new Pair(response, ret);
         resList.add(p);
         return ret;
     }
